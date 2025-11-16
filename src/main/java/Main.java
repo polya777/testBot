@@ -7,7 +7,7 @@ public class Main {
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new SimpleMemeBot());
-            System.out.println("Бот запущен!");
+            System.out.println("Бот запущен! Привет, я умею присылать мемы");
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
