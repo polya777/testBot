@@ -4,13 +4,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import resources.config.properties;
 
 public class SimpleMemeBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return bot.username;
+        return "Game_bot";
     }
 
     @Override
@@ -45,13 +44,13 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             SendPhoto sendPhoto = new SendPhoto();
             sendPhoto.setChatId(chatId.toString());
             sendPhoto.setPhoto(photo);
-            sendPhoto.setCaption("Вот твой мем! 🎭");
+            sendPhoto.setCaption("Вот твой мем! ");
 
             execute(sendPhoto);
             System.out.println("Мем отправлен: " + memeUrl);
 
         } catch (Exception e) {
-            sendText(chatId, "Ошибка при отправке мема 😢");
+            sendText(chatId, "Ошибка при отправке мема ");
             e.printStackTrace();
         }
     }
