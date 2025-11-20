@@ -6,8 +6,7 @@ public class MemeService {
     private static final Random random = new Random();
 
     private static final List<String> MEME_URLS = Arrays.asList(
-            "https://i.redd.it/utixv6nqbgtd1.jpeg",
-            "https://i.redd.it/0p3d88a3nftd1.jpeg"
+            "https://github.com/httpcats/http.cat/tree/master/public/images-original"
     );
 
     public static String getRandomMemeUrl() {
