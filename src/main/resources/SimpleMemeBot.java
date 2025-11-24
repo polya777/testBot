@@ -4,13 +4,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import resources.config.properties;
 
 public class SimpleMemeBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return bot.username;
+        return "Game_bot";
     }
 
     @Override
@@ -25,14 +24,18 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            if (messageText.equals("/start")) {
-                sendText(chatId, "Привет! Я бот для мемов. Напиши /meme чтобы получить мем!");
-            }
-            else if (messageText.equals("/meme") || messageText.equals("мем")) {
-                sendMeme(chatId);
-            }
-            else {
-                sendText(chatId, "Не понимаю. Напиши /meme для мема или /start для начала");
+            switch (messageText) {
+                case "/start":
+                    sendText(chatId, "Привет! Я бот для мемов. Напиши /meme чтобы получить мем!");
+                    break;
+                case "/meme":
+                    sendMeme(chatId);
+                    break;
+                case "/help":
+                    sendText(chatId, "Напиши /meme для мема или /start для начала");
+                    break;
+                default:
+                    sendText(chatId, "Не понимаю. Используйте /help");
             }
         }
     }
@@ -45,13 +48,13 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             SendPhoto sendPhoto = new SendPhoto();
             sendPhoto.setChatId(chatId.toString());
             sendPhoto.setPhoto(photo);
-            sendPhoto.setCaption("Вот твой мем! 🎭");
+            sendPhoto.setCaption("Вот твой мем!");
 
             execute(sendPhoto);
             System.out.println("Мем отправлен: " + memeUrl);
 
         } catch (Exception e) {
-            sendText(chatId, "Ошибка при отправке мема 😢");
+            sendText(chatId, "Ошибка при отправке мема");
             e.printStackTrace();
         }
     }
