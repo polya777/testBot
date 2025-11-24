@@ -6,7 +6,7 @@ public class MemeService {
     private static final Random random = new Random();
 
     private static final List<String> MEME_URLS = Arrays.asList(
-            "https://github.com/httpcats/http.cat/tree/master/public/images-original"
+            "https://memesapi.vercel.app/"
     );
 
     public static String getRandomMemeUrl() {
