@@ -9,13 +9,14 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "Game_bot";
+
+        return Config.getBotUsername();
     }
 
     @Override
     public String getBotToken() {
 
-        return "8244351876:AAFWE2m1Fr5pZ1Cl_ULKlQa2n2vksWvFaAM";
+        return Config.getBotToken();
     }
 
     @Override
