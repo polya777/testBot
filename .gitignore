@@ -3,9 +3,8 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 *.idea
-*.iml
-config.properties
-
+testBot.iml
+**/src/main/resources/config.properties
 ### Eclipse ###
 .apt_generated
 .classpath
