@@ -9,13 +9,14 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "Game_bot";
+
+        return Config.getBotUsername();
     }
 
     @Override
     public String getBotToken() {
 
-        return "8244351876:AAFWE2m1Fr5pZ1Cl_ULKlQa2n2vksWvFaAM";
+        return Config.getBotToken();
     }
 
     @Override
@@ -24,14 +25,18 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            if (messageText.equals("/start")) {
-                sendText(chatId, "Привет! Я бот для мемов. Напиши /meme чтобы получить мем!");
-            }
-            else if (messageText.equals("/meme") || messageText.equals("мем")) {
-                sendMeme(chatId);
-            }
-            else {
-                sendText(chatId, "Не понимаю. Напиши /meme для мема или /start для начала");
+            switch (messageText) {
+                case "/start":
+                    sendText(chatId, "Привет! Я бот для мемов. Напиши /meme чтобы получить мем!");
+                    break;
+                case "/meme":
+                    sendMeme(chatId);
+                    break;
+                case "/help":
+                    sendText(chatId, "Напиши /meme для мема или /start для начала");
+                    break;
+                default:
+                    sendText(chatId, "Не понимаю. Используйте /help");
             }
         }
     }
