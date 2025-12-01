@@ -23,4 +23,13 @@ public class Config {
     public static String getBotUsername() {
         return properties.getProperty("bot.username");
     }
+
+    public static String getCatApiUrl() {
+        return properties.getProperty("cat.api.url");
+    }
+
+    public static String getAlternativeCatApiUrl() {
+        return properties.getProperty("cat.alternative.api.url");
+    }
+
 }
