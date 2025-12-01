@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 public class SimpleMemeBot extends TelegramLongPollingBot {
     private static final Logger logger = Logger.getLogger(SimpleMemeBot.class.getName());
+    private final MemeService MemeService = new MemeService();
     @Override
     public String getBotUsername() {
 
@@ -42,24 +43,7 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
         }
     }
 
-    /*private void sendMeme(Long chatId) {
-        try {
-            String memeUrl = MemeService.getCatApiUrl();
-            InputFile photo = new InputFile(memeUrl);
 
-            SendPhoto sendPhoto = new SendPhoto();
-            sendPhoto.setChatId(chatId.toString());
-            sendPhoto.setPhoto(photo);
-            sendPhoto.setCaption("Вот твой мем! ");
-
-            execute(sendPhoto);
-            System.out.println("Мем отправлен: " + memeUrl);
-
-        } catch (Exception e) {
-            sendText(chatId, "Ошибка при отправке мема ");
-            e.printStackTrace();
-        }
-    }*/
     private void sendRandomCatMeme(Long chatId) {
         try {
             logger.info("Запрос изображения кота для чата: " + chatId);

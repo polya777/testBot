@@ -3,13 +3,13 @@ import java.util.List;
 import java.util.Random;
 
 public class MemeService {
-    private static final Random random = new Random();
+    private   final Random random = new Random();
 
-    private static final List<String> MEME_URLS = Arrays.asList(
+    private   final List<String> MEME_URLS = Arrays.asList(
             "https://memesapi.vercel.app/"
     );
 
-    public static String getRandomMemeUrl() {
+    public   String getRandomMemeUrl() {
         return MEME_URLS.get(random.nextInt(MEME_URLS.size()));
     }
 }*/
@@ -24,17 +24,17 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class MemeService {
-    private static final Logger logger = Logger.getLogger(MemeService.class.getName());
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static HttpClient httpClient;
+    private   final Logger logger = Logger.getLogger(MemeService.class.getName());
+    private   final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClient httpClient;
 
     public MemeService() {
-        this.httpClient = HttpClient.newBuilder()
+        httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
     }
 
-    public static String getRandomCatImageUrl() {
+    public   String getRandomCatImageUrl() {
         String imageUrl = tryPrimaryApi();
         if (imageUrl != null) {
             return imageUrl;
@@ -44,7 +44,7 @@ public class MemeService {
         return tryAlternativeApi();
     }
 
-    private static String tryPrimaryApi() {
+    private   String tryPrimaryApi() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.thecatapi.com/v1/images/search?mime_types=jpg,png"))
@@ -69,7 +69,7 @@ public class MemeService {
         return null;
     }
 
-    private static String tryAlternativeApi() {
+    private   String tryAlternativeApi() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://cataas.com/cat?json=true"))
