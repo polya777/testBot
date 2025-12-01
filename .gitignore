@@ -3,7 +3,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 *.idea
-testBot.iml/
+*.iml
 **/src/main/resources/config.properties/
 
 
