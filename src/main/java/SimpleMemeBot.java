@@ -46,7 +46,7 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
 
     private void sendRandomCatMeme(Long chatId) {
         try {
-            logger.info("Запрос изображения кота для чата: " + chatId);
+            logger.info(String.format("Запрос изображения кота для чата: %s", chatId));
             String imageUrl = MemeService.getRandomCatImageUrl();
 
             SendPhoto photo = new SendPhoto();
@@ -55,10 +55,10 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             photo.setCaption("Вот ваш случайный кот!\nХотите еще? Просто отправьте /meme");
 
             execute(photo);
-            logger.info("Изображение кота отправлено в чат: " + chatId);
+            logger.info(String.format("Изображение кота отправлено в чат: %s", chatId));
 
         } catch (Exception e) {
-            logger.severe("Ошибка при отправке изображения в чат " + chatId + ": " + e.getMessage());
+            logger.severe(String.format("Ошибка при отправке изображения в чат %s: %s", chatId, e.getMessage()));
             sendText(chatId, "Не удалось загрузить изображение кота. Попробуйте позже.");
         }
     }
