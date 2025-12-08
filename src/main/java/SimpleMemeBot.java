@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 public class SimpleMemeBot extends TelegramLongPollingBot {
     private static final Logger logger = Logger.getLogger(SimpleMemeBot.class.getName());
@@ -35,24 +37,34 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
 
             switch (messageText) {
                 case "/start":
-                    sendText(chatId, "Привет! Я бот, который присылает котиков и может играть в камень-ножницы-бумага. Напиши /cat чтобы получить котика или /rps, чтобы сыграть в камень-ножницы-бумага.");
+                    sendStartMenu(chatId);
                     break;
                 case "/cat":
+                case "Котик":
                     sendRandomCatMeme(chatId);
                     break;
                 case "/help":
-                    sendText(chatId, "Напиши /cat для котика, /start для начала или /rps, чтобы сыграть в камень-ножницы-бумага");
+                case "Помощь":
+                    sendHelpMessage(chatId);
                     break;
                 case "/rps":
+                case "Камень-ножницы-бумага":
                     startRPSGame(chatId);
                     break;
                 case "/rock":
+                case "Камень":
+                    processRPSMove(chatId, "камень");
+                    break;
                 case "/scissors":
+                case "Ножницы":
+                    processRPSMove(chatId, "ножницы");
+                    break;
                 case "/paper":
-                    processRPSMove(chatId, messageText.substring(1)); // Убираем слеш
+                case "Бумага":
+                    processRPSMove(chatId, "бумага");
                     break;
                 default:
-                    sendText(chatId, "Не понимаю. Используйте /help");
+                    sendTextWithKeyboard(chatId, "Не понимаю. Используйте команду /help или выберите команду:", createMainMenuKeyboard());
             }
         }
     }
@@ -75,7 +87,7 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
 
         } catch (Exception e) {
             logger.severe(String.format("Ошибка при отправке изображения в чат %s: %s", chatId, e.getMessage()));
-            sendText(chatId, "Не удалось загрузить изображение кота. Попробуйте позже.");
+            sendTextWithKeyboard(chatId, "Не удалось загрузить изображение кота. Попробуйте позже.", createMainMenuKeyboard());
         }
     }
 
@@ -84,19 +96,21 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
     private void startRPSGame(Long chatId) {
         RPSGameState state = new RPSGameState();
         rpsGames.put(chatId, state);
-        sendText(chatId, "Начинаем игру! 5 раундов. Пишите /rock - камень, /paper - бумага или /scissors - ножницы \nРаунд 1 из 5:");
+        String message = "*Камень-Ножницы-Бумага*\n\nИгра из 5 раундов\nПри равенстве - дополнительные раунды\n\nВыберите ваш ход:\nРаунд 1 из 5:";
+
+        sendTextWithKeyboard(chatId, message, createRPSGameKeyboard());
     }
 
     private void processRPSMove(Long chatId, String userChoice) {
         if (!rpsGames.containsKey(chatId)) {
-            sendText(chatId, "Сначала начните игру: /rps");
+            sendTextWithKeyboard(chatId, "Сначала начните игру: /rps", createRPSGameKeyboard());
             return;
         }
 
         RPSGameState state = rpsGames.get(chatId);
 
         Random rand = new Random();
-        String[] choices = {"rock", "paper", "scissors"};
+        String[] choices = {"камень", "бумага", "ножницы"};
         String botChoice = choices[rand.nextInt(3)];
 
         String result = determineRoundResult(userChoice, botChoice);
@@ -111,8 +125,7 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
 
         String roundInfo = String.format("Вы: %s vs Бот: %s - %s",
                 userChoice, botChoice,
-                result.equals("user") ? "Вы победили" :
-                        result.equals("bot") ? "Бот победил" : "Ничья");
+                result.equals("user") ? "Вы победили" : result.equals("bot") ? "Бот победил" : "Ничья");
         state.history.add(roundInfo);
 
         int totalRounds = state.history.size();
@@ -121,7 +134,7 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
         if (!state.isExtraRound && totalRounds >= 5) {
             if (state.userWins == state.botWins) {
                 state.isExtraRound = true;
-                sendText(chatId, roundResult + "Счёт равен! Дополнительный раунд:");
+                sendTextWithKeyboard(chatId, roundResult + "Счёт равен! Дополнительный раунд:", createRPSGameKeyboard());
             } else {
                 showResults(chatId, state);
                 rpsGames.remove(chatId);
@@ -131,10 +144,10 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
                 showResults(chatId, state);
                 rpsGames.remove(chatId);
             } else {
-                sendText(chatId, roundResult + "Снова ничья! Ещё один раунд:");
+                sendTextWithKeyboard(chatId, roundResult + "Снова ничья! Ещё один раунд:", createRPSGameKeyboard());
             }
         } else {
-            sendText(chatId, roundResult + "Раунд " + (totalRounds + 1) + " из 5:");
+            sendTextWithKeyboard(chatId, roundResult + "Раунд " + (totalRounds + 1) + " из 5:", createRPSGameKeyboard());
         }
     }
 
@@ -143,9 +156,9 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             return "draw";
         }
 
-        if ((userChoice.equals("rock") && botChoice.equals("scissors")) ||
-                (userChoice.equals("scissors") && botChoice.equals("paper")) ||
-                (userChoice.equals("paper") && botChoice.equals("rock"))) {
+        if ((userChoice.equals("камень") && botChoice.equals("ножницы")) ||
+                (userChoice.equals("ножницы") && botChoice.equals("бумага")) ||
+                (userChoice.equals("бумага") && botChoice.equals("камень"))) {
             return "user";
         }
 
@@ -168,18 +181,87 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             winner = "Ничья в игре!";
         }
 
-        String result = String.format("\nИтоговый счёт:\nВы: %d побед\nБот: %d побед\nНичьих: %d\n\n%s\n\nНовая игра: /rps",
-                state.userWins, state.botWins, state.draws, winner);
+        String result = String.format("\n*Итоговый счёт:*\nВы: %d победы\nБот: %d победы\nНичьих: %d\n\n%s\n", state.userWins, state.botWins, state.draws, winner);
 
-        sendText(chatId, stats.toString() + result);
+        sendTextWithKeyboard(chatId,result + "\nВозвращаемся в главное меню...", createMainMenuKeyboard());
+        rpsGames.remove(chatId);
     }
 
+    private ReplyKeyboardMarkup createMainMenuKeyboard() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(false);
 
+        List<KeyboardRow> keyboard = new ArrayList<>();
 
-    private void sendText(Long chatId, String text) {
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Котик");
+        row1.add("Камень-ножницы-бумага");
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("Помощь");
+
+        keyboard.add(row1);
+        keyboard.add(row2);
+
+        keyboardMarkup.setKeyboard(keyboard);
+        return keyboardMarkup;
+    }
+
+    private void sendStartMenu(Long chatId) {
+        String welcomeMessage = "Добро пожаловать!\n\n" +
+                "Я бот, который умеет:\n" +
+                "- Присылать котиков\n" +
+                "- Играть в камень-кожницы-бумага\n\n" +
+                "Выберите действие:\n" +
+                "/cat - получить случайного котика\n" +
+                "/rps - сыграть в камень-ножницы-бумага\n" +
+                "/help - помощь по боту";
+
+        sendTextWithKeyboard(chatId, welcomeMessage, createMainMenuKeyboard());
+    }
+
+    private ReplyKeyboardMarkup createRPSGameKeyboard() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row = new KeyboardRow();
+        row.add("Камень");
+        row.add("Ножницы");
+        row.add("Бумага");
+
+        keyboard.add(row);
+
+        keyboardMarkup.setKeyboard(keyboard);
+        return keyboardMarkup;
+    }
+
+    private void sendHelpMessage(Long chatId) {
+        String helpMessage = "*Помощь*\n\n" +
+                "*Доступные команды:*\n" +
+                "/cat - получить случайного котика\n" +
+                "/rps - играть в Камень-Ножницы-Бумага\n\n" +
+                "*Правила игры:*\n" +
+                "- Камень бьет ножницы\n" +
+                "- Ножницы бьют бумагу\n" +
+                "- Бумага бьет камень\n" +
+                "- 5 основных раундов\n" +
+                "- При равенстве - дополнительные раунды";
+
+        sendTextWithKeyboard(chatId, helpMessage, createMainMenuKeyboard());
+    }
+
+    private void sendTextWithKeyboard(Long chatId, String text, ReplyKeyboardMarkup keyboard) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(text);
+        message.setParseMode("Markdown");
+        message.setReplyMarkup(keyboard);
 
         try {
             execute(message);
@@ -187,8 +269,6 @@ public class SimpleMemeBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
-
 
     private class RPSGameState {
         int userWins = 0;
