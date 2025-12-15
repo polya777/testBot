@@ -57,8 +57,7 @@ public class RPSGame implements Command {
             state.addDraws();
         }
 
-        String roundInfo = String.format("Вы: %s vs Бот: %s - %s",
-                userChoice, botChoice,
+        String roundInfo = String.format("Вы: %s vs Бот: %s - %s", userChoice, botChoice,
                 result.equals("user") ? "Вы победили" : result.equals("bot") ? "Бот победил" : "Ничья");
         state.addHistory(roundInfo);
 
@@ -68,7 +67,7 @@ public class RPSGame implements Command {
         if (!state.getExtraRouand() && totalRounds >= 5) {
             if (state.getUserWins() == state.getBotWins()) {
                 state.changeExtraRound();
-                buttons.sendTextWithKeyboard(chatId, roundResult + "Счёт равен! Дополнительный раунд:", buttons.createRPSGameKeyboard());
+                buttons.sendTextWithKeyboard(chatId, String.format("%sСчёт равен! Дополнительный раунд:", roundResult), buttons.createRPSGameKeyboard());
             } else {
                 showResults(chatId, state);
                 rpsGames.remove(chatId);
@@ -78,10 +77,10 @@ public class RPSGame implements Command {
                 showResults(chatId, state);
                 rpsGames.remove(chatId);
             } else {
-                buttons.sendTextWithKeyboard(chatId, roundResult + "Снова ничья! Ещё один раунд:", buttons.createRPSGameKeyboard());
+                buttons.sendTextWithKeyboard(chatId, String.format("%sСнова ничья! Ещё один раунд:", roundResult), buttons.createRPSGameKeyboard());
             }
         } else {
-            buttons.sendTextWithKeyboard(chatId, roundResult + "Раунд " + (totalRounds + 1) + " из 5:", buttons.createRPSGameKeyboard());
+            buttons.sendTextWithKeyboard(chatId, String.format("%sРаунд %d из 5:", roundResult, totalRounds + 1), buttons.createRPSGameKeyboard());
         }
     }
 
@@ -109,9 +108,9 @@ public class RPSGame implements Command {
             winner = "Ничья в игре!";
         }
 
-        String result = String.format("\n*Итоговый счёт:*\nВы: %d победы\nБот: %d победы\nНичьих: %d\n\n%s\n", state.getUserWins(), state.getBotWins(), state.getDraws(), winner);
+        String result = String.format("\n*Итоговый счёт:*\nВы: %d победы\nБот: %d победы\nНичьих: %d\n\n%s\n\nВозвращаемся в главное меню...", state.getUserWins(), state.getBotWins(), state.getDraws(), winner);
 
-        buttons.sendTextWithKeyboard(chatId,result + "\nВозвращаемся в главное меню...", buttons.createMainMenuKeyboard());
+        buttons.sendTextWithKeyboard(chatId,result, buttons.createMainMenuKeyboard());
         rpsGames.remove(chatId);
     }
 }
