@@ -9,6 +9,7 @@ public class RPSGame implements Command {
     private static TelegramLongPollingBot bot;
     private Map<Long, RPSGameState> rpsGames = new HashMap<>();
     private final Buttons buttons;
+    private String[] choices = {"камень", "бумага", "ножницы"};
 
     public RPSGame(TelegramLongPollingBot bot) {
         this.bot = bot;
@@ -44,7 +45,7 @@ public class RPSGame implements Command {
         RPSGameState state = rpsGames.get(chatId);
 
         Random rand = new Random();
-        String[] choices = {"камень", "бумага", "ножницы"};
+
         String botChoice = choices[rand.nextInt(3)];
 
         String result = determineRoundResult(userChoice, botChoice);
