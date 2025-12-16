@@ -14,7 +14,6 @@ public class RPSGame implements Command {
     public RPSGame(TelegramLongPollingBot bot) {
         this.bot = bot;
         this.buttons = new Buttons(bot);
-
     }
 
     @Override
