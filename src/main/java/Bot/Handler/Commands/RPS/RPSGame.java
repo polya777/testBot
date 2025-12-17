@@ -9,7 +9,7 @@ public class RPSGame implements Command {
     private static TelegramLongPollingBot bot;
     private Map<Long, RPSGameState> rpsGames = new HashMap<>();
     private final Buttons buttons;
-    private String[] choices = {"камень", "бумага", "ножницы"};
+    private final String[] choices = {"камень", "бумага", "ножницы"};
 
     public RPSGame(TelegramLongPollingBot bot) {
         this.bot = bot;
@@ -64,7 +64,7 @@ public class RPSGame implements Command {
         int totalRounds = state.getSizeHistory();
         String roundResult = String.format("Раунд %d:\n%s\n", totalRounds, roundInfo);
 
-        if (!state.getExtraRouand() && totalRounds >= 5) {
+        if (!state.getExtraRound() && totalRounds >= 5) {
             if (state.getUserWins() == state.getBotWins()) {
                 state.changeExtraRound();
                 buttons.sendTextWithKeyboard(chatId, String.format("%sСчёт равен! Дополнительный раунд:", roundResult), buttons.createRPSGameKeyboard());
@@ -72,7 +72,7 @@ public class RPSGame implements Command {
                 showResults(chatId, state);
                 rpsGames.remove(chatId);
             }
-        } else if (state.getExtraRouand()) {
+        } else if (state.getExtraRound()) {
             if (state.getUserWins() > state.getBotWins() || state.getBotWins() > state.getUserWins()) {
                 showResults(chatId, state);
                 rpsGames.remove(chatId);

@@ -28,7 +28,7 @@ public class RPSGameState {
     public int getDraws() {
         return draws;
     }
-    public boolean getExtraRouand() {
+    public boolean getExtraRound() {
         return isExtraRound;
     }
     public void addHistory(String roundInfo) {
