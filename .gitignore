@@ -32,4 +32,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 # Project exclude paths
-/target/
+!target/telegram-meme-bot-1.0-SNAPSHOT.jar
