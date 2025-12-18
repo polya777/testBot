@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>dog-breeds-bot</artifactId>
+    <artifactId>telegram-meme-bot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
