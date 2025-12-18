@@ -1,0 +1,9 @@
+[build]
+builder = "NIXPACKS"
+nixpacksVersion = "1.15.0"
+
+[deploy]
+startCommand = "java -jar target/*.jar"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "always"
