@@ -19,11 +19,11 @@ public class Config {
     }
 
     public static String getBotToken() {
-        return properties.getProperty("bot.token");
+        return properties.getProperty("BOT_TOKEN");
     }
 
     public static String getBotUsername() {
-        return properties.getProperty("bot.username");
+        return properties.getProperty("BOT_USERNAME");
     }
 
     public static String getCatApiUrl() {
